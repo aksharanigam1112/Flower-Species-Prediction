@@ -6,6 +6,7 @@ pd.set_option('display.max_column', 8)
 pd.set_option('precision', 2)
 
 import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score
 import  seaborn as sbn
 import  warnings
 warnings.filterwarnings(action='ignore')
@@ -23,5 +24,54 @@ arr = df.values
 x = np.array(arr[:,0:4])
 y = np.array(arr[:,4])
 
-# print(x)
+
+sbn.pairplot(df.dropna(),hue='class')
+plt.show()
+
+# df['class'].unique()
+#
+# df = df.loc[(df['class']!='Iris-setosa') | (df['sepal width']>=2.5)]
+# df.loc[df['class'] == 'Iris-setosa', 'sepal width'].hist()
+#
+# df = df.loc[(df['class'] == 'Iris-versicolor') & (df['sepal length'] < 1.0)]
+#
+# df.loc[(df['class'] == 'Iris-versicolor') & (df['sepal length'] < 1.0), 'sepal length'] *= 100.0
+#
+# df.loc[df['class'] == 'Iris-versicolor', 'sepal length'].hist()
+
+
+
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+y=le.fit_transform(y)
+print(y)
+
+
+# Feature Scaling
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+sc.fit(x)
+x_scaled = sc.transform(x)
+
+# Splitting the data
+
+from sklearn.model_selection import train_test_split
+x_train , x_test , y_train , y_test = train_test_split(x_scaled , y ,test_size=0.3 , random_state=1 )
+
+print(y_train)
+
+# Spot Check Algos
+
+# 1) KNN
+from sklearn.neighbors import KNeighborsClassifier
+
+
+model = KNeighborsClassifier(n_neighbors=3)
+model.fit(x_train , y_train)
+y_pred = model.predict(x_test)
+acc = round(accuracy_score(y_pred,y_test)*100,2)
+
+print("\nFor KNN Algo accuracy is : ",acc)
+
 
